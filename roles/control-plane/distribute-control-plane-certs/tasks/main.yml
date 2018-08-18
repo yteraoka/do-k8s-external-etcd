@@ -1,0 +1,30 @@
+---
+- name: copy control-plane certs
+  copy:
+    src: fetched/control-plane/{{ item }}
+    dest: /etc/kubernetes/pki/{{ item }}
+    owner: root
+    group: root
+    mode: "0644"
+  with_items:
+    - ca.crt
+    - sa.pub
+    - front-proxy-ca.crt
+  tags:
+    - control-plane
+    - distribute-control-plane-certs
+
+- name: copy control-plane keys
+  copy:
+    src: fetched/control-plane/{{ item }}
+    dest: /etc/kubernetes/pki/{{ item }}
+    owner: root
+    group: root
+    mode: "0600"
+  with_items:
+    - ca.key
+    - sa.key
+    - front-proxy-ca.key
+  tags:
+    - control-plane
+    - distribute-control-plane-certs

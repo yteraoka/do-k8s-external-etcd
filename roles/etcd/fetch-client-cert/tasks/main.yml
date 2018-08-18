@@ -1,0 +1,12 @@
+---
+- name: fetch apiserver-etcd-client key and cert
+  fetch:
+    src: "/etc/kubernetes/pki/{{ item }}"
+    dest: "fetched/{{ item }}"
+    flat: yes
+  with_items:
+    - apiserver-etcd-client.crt
+    - apiserver-etcd-client.key
+  tags:
+    - etcd
+    - fetch-client-cert

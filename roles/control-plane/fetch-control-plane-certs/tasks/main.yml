@@ -1,0 +1,16 @@
+---
+- name: fetch control-plane files
+  fetch:
+    src: /etc/kubernetes/pki/{{ item }}
+    dest: fetched/control-plane/{{ item }}
+    flat: yes
+  with_items:
+    - ca.crt
+    - ca.key
+    - sa.key
+    - sa.pub
+    - front-proxy-ca.crt
+    - front-proxy-ca.key
+  tags:
+    - control-plane
+    - fetch-control-plane-certs

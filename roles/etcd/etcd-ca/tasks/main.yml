@@ -1,0 +1,29 @@
+---
+- name: stat /etc/kubernetes/pki/etcd/ca.key
+  stat:
+    path: /etc/kubernetes/pki/etcd/ca.key
+  register: etcd_ca
+  tags:
+    - etcd
+    - etcd-ca
+
+- name: create etcd ca 
+  command: kubeadm alpha phase certs etcd-ca
+  when: not (etcd_ca.stat is defined and etcd_ca.stat.exists)
+  tags:
+    - etcd
+    - etcd-ca
+
+- name: download ca
+  fetch:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    flat: yes
+  with_items:
+    - src: /etc/kubernetes/pki/etcd/ca.key
+      dest: fetched/etcd-ca.key
+    - src: /etc/kubernetes/pki/etcd/ca.crt
+      dest: fetched/etcd-ca.crt
+  tags:
+    - etcd
+    - etcd-ca

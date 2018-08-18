@@ -1,0 +1,32 @@
+---
+- name: kubeadm alpha phase certs etcd-server
+  command: kubeadm alpha phase certs etcd-server --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: /etc/kubernetes/pki/etcd/server.crt
+  tags:
+    - etcd
+    - etcd-server-cert
+
+- name: kubeadm alpha phase certs etcd-peer
+  command: kubeadm alpha phase certs etcd-peer --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: /etc/kubernetes/pki/etcd/peer.crt
+  tags:
+    - etcd
+    - etcd-server-cert
+
+- name: kubeadm alpha phase certs etcd-healthcheck-client
+  command: kubeadm alpha phase certs etcd-healthcheck-client --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: /etc/kubernetes/pki/etcd/healthcheck-client.crt
+  tags:
+    - etcd
+    - etcd-server-cert
+
+- name: kubeadm alpha phase certs apiserver-etcd-client
+  command: kubeadm alpha phase certs apiserver-etcd-client --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: /etc/kubernetes/pki/apiserver-etcd-client.crt
+  tags:
+    - etcd
+    - etcd-server-cert

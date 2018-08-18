@@ -1,0 +1,54 @@
+---
+- hosts: etcd
+  remote_user: root
+  roles:
+    - role: common/yum-update
+      when: do_yum_update is defined
+    - role: common/docker
+    - role: common/selinux
+    - role: common/k8s-repo
+    - role: common/kube-tools
+    - role: etcd/etcd-prepare
+    - role: etcd/etcd-kubeadm-config
+    - role: etcd/etcd-ca
+      when: ansible_hostname == 'etcd1'
+    - role: etcd/copy-etcd-ca
+      when: ansible_hostname != 'etcd1'
+    - role: etcd/etcd-server-cert
+    - role: etcd/etcd-manifest
+    - role: etcd/etcd-cluster-health
+    - role: etcd/fetch-client-cert
+      when: ansible_hostname == 'etcd1'
+
+- hosts: control-plane
+  remote_user: root
+  roles:
+    - role: common/yum-update
+      when: do_yum_update is defined
+    - role: common/docker
+    - role: common/selinux
+    - role: common/k8s-repo
+    - role: common/kube-tools
+    - role: control-plane/copy-certs
+    - role: control-plane/kubeadm-config
+    - role: control-plane/kubeadm-init
+      when: ansible_hostname == 'cp1'
+    - role: control-plane/fetch-control-plane-certs
+      when: ansible_hostname == 'cp1'
+    - role: control-plane/distribute-control-plane-certs
+      when: ansible_hostname != 'cp1'
+    - role: control-plane/kubeadm-init
+      when: ansible_hostname != 'cp1'
+    - role: control-plane/kubectl-config
+    - role: control-plane/calico
+      when: ansible_hostname == 'cp1'
+
+- hosts: worker
+  remote_user: root
+  roles:
+    - role: common/yum-update
+      when: do_yum_update is defined
+    - role: common/docker
+    - role: common/selinux
+    - role: common/k8s-repo
+    - role: common/kube-tools

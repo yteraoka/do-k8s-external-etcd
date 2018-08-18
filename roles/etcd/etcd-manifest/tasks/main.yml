@@ -1,0 +1,17 @@
+---
+- name: kubeadm alpha phase etcd local
+  command: kubeadm alpha phase etcd local --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: /etc/kubernetes/manifests/etcd.yaml
+  tags:
+    - etcd
+    - etcd-manifest
+
+- name: enable and start kubelet
+  service:
+    name: kubelet
+    state: started
+    enabled: yes
+  tags:
+    - etcd
+    - etcd-manifest

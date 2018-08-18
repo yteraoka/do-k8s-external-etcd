@@ -1,0 +1,11 @@
+---
+- name: copy kubeadmcfg.yaml
+  template:
+    src: kubeadmcfg.yaml.j2
+    dest: /tmp/kubeadmcfg.yaml
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - etcd
+    - etcd-kubeadm-config

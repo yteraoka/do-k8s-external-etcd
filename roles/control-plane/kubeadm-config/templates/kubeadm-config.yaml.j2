@@ -1,0 +1,19 @@
+apiVersion: kubeadm.k8s.io/v1alpha2
+kind: MasterConfiguration
+kubernetesVersion: v1.11.0
+apiServerCertSANs:
+- "{{ load_balancer_dns }}"
+api:
+    controlPlaneEndpoint: "{{ load_balancer_dns }}:{{ load_balancer_port | default(443) }}"
+etcd:
+    external:
+        endpoints:
+{% for h in groups['etcd'] %}
+        - https://{{ hostvars[h]['ansible_eth1']['ipv4']['address'] }}:2379
+{% endfor %}
+        caFile: /etc/kubernetes/pki/etcd/ca.crt
+        certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
+        keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key
+networking:
+    # This CIDR is a calico default. Substitute or remove for your CNI provider.
+    podSubnet: "192.168.0.0/16"

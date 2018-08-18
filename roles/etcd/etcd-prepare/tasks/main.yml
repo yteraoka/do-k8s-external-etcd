@@ -1,0 +1,39 @@
+---
+- name: mkdir /var/lib/kubelet
+  file:
+    state: directory
+    path: /var/lib/kubelet
+    owner: root
+    group: root
+    mode: "0755"
+  tags:
+    - etcd
+    - etcd-prepare
+
+- name: copy kubelet/config.yaml
+  copy:
+    src: config.yaml
+    dest: /var/lib/kubelet/config.yaml
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - etcd
+    - etcd-prepare
+
+- name: copy 20-etcd-service-manager.conf
+  copy:
+    src: 20-etcd-service-manager.conf
+    dest: /etc/systemd/system/kubelet.service.d/20-etcd-service-manager.conf
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - etcd
+    - etcd-prepare
+
+- name: systemctl daemon-reload
+  command: /usr/bin/systemctl daemon-reload
+  tags:
+    - etcd
+    - etcd-prepare

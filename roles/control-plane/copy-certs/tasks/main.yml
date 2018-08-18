@@ -1,0 +1,48 @@
+---
+- name: mkdir /etc/kubernetes/pki/etcd
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: "0755"
+  with_items:
+    - /etc/kubernetes
+    - /etc/kubernetes/pki
+    - /etc/kubernetes/pki/etcd
+  tags:
+    - control-plane
+    - copy-certs
+
+- name: copy etcd ca
+  copy:
+    src: fetched/etcd-ca.crt
+    dest: /etc/kubernetes/pki/etcd/ca.crt
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - control-plane
+    - copy-certs
+
+- name: copy apiserver-etcd-client.crt
+  copy:
+    src: fetched/apiserver-etcd-client.crt
+    dest: /etc/kubernetes/pki/apiserver-etcd-client.crt
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - control-plane
+    - copy-certs
+
+- name: copy apiserver-etcd-client.key
+  copy:
+    src: fetched/apiserver-etcd-client.key
+    dest: /etc/kubernetes/pki/apiserver-etcd-client.key
+    owner: root
+    group: root
+    mode: "0600"
+  tags:
+    - control-plane
+    - copy-certs

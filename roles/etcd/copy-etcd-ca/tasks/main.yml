@@ -1,0 +1,37 @@
+---
+- name: mkdir /etc/kubernetes/pki/etcd
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: "0755"
+  with_items:
+    - /etc/kubernetes
+    - /etc/kubernetes/pki
+    - /etc/kubernetes/pki/etcd
+  tags:
+    - etcd
+    - copy-etcd-ca
+
+- name: copy ca.key
+  copy:
+    src: fetched/etcd-ca.crt
+    dest: /etc/kubernetes/pki/etcd/ca.crt
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - etcd
+    - copy-etcd-ca
+
+- name: copy ca.crt
+  copy:
+    src: fetched/etcd-ca.key
+    dest: /etc/kubernetes/pki/etcd/ca.key
+    owner: root
+    group: root
+    mode: "0600"
+  tags:
+    - etcd
+    - copy-etcd-ca

@@ -1,0 +1,14 @@
+---
+- name: cluster-health
+  command: docker run --rm --net host -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.18 etcdctl --cert-file /etc/kubernetes/pki/etcd/peer.crt --key-file /etc/kubernetes/pki/etcd/peer.key --ca-file /etc/kubernetes/pki/etcd/ca.crt --endpoints https://{{ ansible_eth1.ipv4.address }}:2379 cluster-health
+  register: etcd_cluster_health
+  tags:
+    - etcd
+    - etcd-cluster-health
+
+- name: cluster-health output
+  debug:
+    var: etcd_cluster_health.stdout_lines
+  tags:
+    - etcd
+    - etcd-cluster-health
