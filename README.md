@@ -6,6 +6,8 @@ DigitalOcean の dynamic inventory を使用するため、環境変数 `DO_API_
 
 OS はひとまず CentOS 7
 
+etcd はコントロールプレーン (APIサーバ？) とは別のホストとしてあります
+
 ## doctl で DigitalOcean のリソースを作成
 
 `--ssh-keys` の値は例
