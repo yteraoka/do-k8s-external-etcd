@@ -1,4 +1,15 @@
 ---
+- name: wait for etcd startup
+  wait_for:
+    host: "{{ ansible_eth1.ipv4.address }}"
+    port: 2380
+    state: started
+    delay: 5
+    timeout: 300
+  tags:
+    - etcd
+    - etcd-cluster-health
+
 - name: cluster-health
   command: docker run --rm --net host -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.18 etcdctl --cert-file /etc/kubernetes/pki/etcd/peer.crt --key-file /etc/kubernetes/pki/etcd/peer.key --ca-file /etc/kubernetes/pki/etcd/ca.crt --endpoints https://{{ ansible_eth1.ipv4.address }}:2379 cluster-health
   register: etcd_cluster_health
