@@ -12,30 +12,76 @@ OS はひとまず CentOS 7
 
 ### etcd 用サーバーを3台作成
 
+それぞれ `first`, `second`, `thrid` という tag をつけることで、ansible では group として扱える
+
 ```
-doctl compute droplet create etcd1 etcd2 etcd3 \
+doctl compute droplet create etcd1 \
   --enable-monitoring \
   --enable-private-networking \
   --image centos-7-x64 \
   --region sgp1 \
   --size s-1vcpu-2gb \
   --ssh-keys 16797382,18482899 \
-  --tag-names etcd \
-  --wait
+  --tag-names etcd,first
+```
+
+```
+doctl compute droplet create etcd2 \
+  --enable-monitoring \
+  --enable-private-networking \
+  --image centos-7-x64 \
+  --region sgp1 \
+  --size s-1vcpu-2gb \
+  --ssh-keys 16797382,18482899 \
+  --tag-names etcd,second
+```
+
+```
+doctl compute droplet create etcd3 \
+  --enable-monitoring \
+  --enable-private-networking \
+  --image centos-7-x64 \
+  --region sgp1 \
+  --size s-1vcpu-2gb \
+  --ssh-keys 16797382,18482899 \
+  --tag-names etcd,third
 ```
 
 ### control-plane 用サーバーを3台作成
 
+それぞれ `first`, `second`, `thrid` という tag をつけることで、ansible では group として扱える
+
 ```
-doctl compute droplet create cp1 cp2 cp3 \
+doctl compute droplet create cp1 \
   --enable-monitoring \
   --enable-private-networking \
   --image centos-7-x64 \
   --region sgp1 \
   --size s-1vcpu-2gb \
   --ssh-keys 16797382,18482899 \
-  --tag-names k8s,control-plane \
-  --wait
+  --tag-names k8s,control-plane,first
+```
+
+```
+doctl compute droplet create cp2 \
+  --enable-monitoring \
+  --enable-private-networking \
+  --image centos-7-x64 \
+  --region sgp1 \
+  --size s-1vcpu-2gb \
+  --ssh-keys 16797382,18482899 \
+  --tag-names k8s,control-plane,second
+```
+
+```
+doctl compute droplet create cp3 \
+  --enable-monitoring \
+  --enable-private-networking \
+  --image centos-7-x64 \
+  --region sgp1 \
+  --size s-1vcpu-2gb \
+  --ssh-keys 16797382,18482899 \
+  --tag-names k8s,control-plane,third
 ```
 
 ### control-plane タグを持つ droplet を forward 先にした load balancer を作成する
