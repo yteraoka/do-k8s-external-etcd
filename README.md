@@ -2,13 +2,30 @@
 
 DigitalOcean の dynamic inventory を使用するため、環境変数 `DO_API_TOKEN` または
 `DO_API_KEY` をセットする必要があります。また、サーバー (droplet) の作成は ansible では
-行いません。Web Console でも doctl コマンドで作成しても良い。
+行いません。Web Console でも doctl コマンドで作成しても良いが、面倒なので Terraform で作れるようにした。
 
 OS はひとまず CentOS 7
 
 etcd はコントロールプレーン (APIサーバ？) とは別のホストとしてあります
 
+## terraform で DigitalOcean のリソースを作成
+
+Ansible の dynamic inventory とは別の環境変数に API Token をセットする必要がある
+
+必要であれば `terraform.tfvars` で変数を調整する
+
+```
+export DIGITALOCEAN_TOKEN=xxxx
+bash init.sh
+terraform plan -out tfout
+terraform apply tfout
+```
+
+`terraform destroy -force` で一発削除できるのが便利
+
 ## doctl で DigitalOcean のリソースを作成
+
+terraform を使っていればこれは不要
 
 `--ssh-keys` の値は例
 
